@@ -15,7 +15,7 @@ import org.springframework.hateoas.server.core.Relation;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Relation(collectionRelation = "certificaten", itemRelation = "certificaat")
+@Relation(collectionRelation = "certificates")
 public class GroeneStroomCertificaatDTO extends RepresentationModel<GroeneStroomCertificaatDTO> {
 
     private Long id;
