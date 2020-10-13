@@ -3,10 +3,10 @@
 2. security using the spec
 
 # How to use this demo-template
-This is a possible certificates provider for [mijn burgerprofiel](https://www.vlaanderen.be/uw-overheid/mijn-burgerprofiel). 
-If you want to integrate with burgerprofiel you have create a client that produces json as shown in this project. 
+This is a possible certificates provider for "[mijn burgerprofiel](https://www.vlaanderen.be/uw-overheid/mijn-burgerprofiel)". 
+If you want to integrate with burgerprofiel you have to create a client that produces json as shown in this project. 
 To see your certificate(s) on mijn burgerprofiel there is also some configuration needed on the Vlaanderen side but 
-if you implement this demo for your use-case the integration with mijn-burgerprofiel is a matter of hours.
+if you implement this demo for your use-case the integration with "mijn burgerprofiel" is a matter of hours.
 
 # Related tutorials
 
