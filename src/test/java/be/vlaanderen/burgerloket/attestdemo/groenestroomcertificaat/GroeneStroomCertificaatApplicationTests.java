@@ -9,5 +9,4 @@ class GroeneStroomCertificaatApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

@@ -18,7 +18,7 @@ public class GroeneStroomCertificaat {
     private String insz;
     private String jaartal;
     private String naam;
-    private String taal; // mogelijkheden die worden geInterpreteerd nl, fr, de en en
+    private String taal; // mogelijkheden die worden geInterpreteerd nl, fr, de, en
 
     public GroeneStroomCertificaat(String naam, String insz, String jaartal, String taal) {
         this.naam = naam;
@@ -26,7 +26,4 @@ public class GroeneStroomCertificaat {
         this.jaartal = jaartal;
         this.taal = taal;
     }
-
-
-
 }
