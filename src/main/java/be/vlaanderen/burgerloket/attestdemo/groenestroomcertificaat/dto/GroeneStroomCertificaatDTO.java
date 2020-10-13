@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 @Data
 @Builder
@@ -14,6 +15,7 @@ import org.springframework.hateoas.RepresentationModel;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Relation(collectionRelation = "certificaten", itemRelation = "certificaat")
 public class GroeneStroomCertificaatDTO extends RepresentationModel<GroeneStroomCertificaatDTO> {
 
     private Long id;
