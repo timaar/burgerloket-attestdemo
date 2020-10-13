@@ -4,7 +4,9 @@ import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.assemblers.G
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.domain.GroeneStroomCertificaat;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.dto.GroeneStroomCertificaatDTO;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.repository.GroeneStroomCertficaatRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.apachecommons.CommonsLog;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -24,25 +26,26 @@ import java.util.Optional;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@CommonsLog
 @RestController
-@RequestMapping(value = "/v1/certificates", produces = { MediaType.APPLICATION_JSON_VALUE, MediaTypes.HAL_JSON_VALUE })
+@RequestMapping(value = "/v1/certificates", produces = {MediaType.APPLICATION_JSON_VALUE, MediaTypes.HAL_JSON_VALUE})
 public class GroeneStroomCertificaatController {
 
     private final GroeneStroomCertficaatRepository repository;
+    private final GroeneStroomCertificaatAssembler groeneStroomCertificaatAssembler;
+    private final PagedResourcesAssembler<GroeneStroomCertificaat> pagedResourcesAssembler;
 
-    @Autowired
-    private GroeneStroomCertificaatAssembler groeneStroomCertificaatAssembler;
-
-    @Autowired
-    private PagedResourcesAssembler<GroeneStroomCertificaat> pagedResourcesAssembler;
-
-    GroeneStroomCertificaatController(GroeneStroomCertficaatRepository repository) {
+    GroeneStroomCertificaatController(GroeneStroomCertficaatRepository repository,
+                                      GroeneStroomCertificaatAssembler groeneStroomCertificaatAssembler,
+                                      PagedResourcesAssembler<GroeneStroomCertificaat> pagedResourcesAssembler) {
         this.repository = repository;
+        this.groeneStroomCertificaatAssembler = groeneStroomCertificaatAssembler;
+        this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
 
-    @GetMapping(path = "/{insz}", produces = { MediaTypes.HAL_JSON_VALUE })
+    @GetMapping("/{insz}")
     public ResponseEntity<PagedModel<GroeneStroomCertificaatDTO>> findAll(@PathVariable String insz,
-                                                                      @PageableDefault Pageable pageable) {
+                                                                          @PageableDefault Pageable pageable) {
 
         // TODO Verify JWT Token
 
@@ -72,23 +75,19 @@ public class GroeneStroomCertificaatController {
     }
 
     @GetMapping("/{insz}/{jaar}/{taal}/download")
-    public ResponseEntity<EntityModel<GroeneStroomCertificaat>> download(@PathVariable String insz,
-                                                                         @PathVariable String jaar,
-                                                                         @PathVariable String taal) {
+    public ResponseEntity<Resource> download(@PathVariable String insz,
+                                             @PathVariable String jaar,
+                                             @PathVariable String taal) {
 
         // TODO Verify JWT Token
 
-        Optional<GroeneStroomCertificaat> optionalGroenStroomCertificaat = repository.findByInszAndJaartalAndTaal(insz, jaar, taal);
+        log.debug("In real application get pdf from database or other webservice.");
+        ClassPathResource resource = new ClassPathResource("dummy.pdf");
+        if (resource != null) {
+            return ResponseEntity.ok().body(resource);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
 
-        // TODO just return pdf
-
-        return optionalGroenStroomCertificaat
-                .map(certificaat -> EntityModel.of(certificaat,
-                        linkTo(methodOn(GroeneStroomCertificaatController.class).findOne(certificaat.getId(), insz))
-                                .withSelfRel(),
-                        linkTo(methodOn(GroeneStroomCertificaatController.class).download(insz, certificaat.getJaartal(), certificaat.getTaal()))
-                                .withRel("download")))
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
     }
 }
