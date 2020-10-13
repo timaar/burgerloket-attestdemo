@@ -87,9 +87,9 @@ public class GroeneStroomCertificaatControllerTest {
                 .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE))
 
                 .andExpect(jsonPath("$.id", is(2)))
-                .andExpect(jsonPath("$.jaartal", is("2018")))
-                .andExpect(jsonPath("$.taal", is("nl")))
-                .andExpect(jsonPath("$.naam", is("Groene stroom certificaat 2018")))
+                .andExpect(jsonPath("$.year", is("2018")))
+                .andExpect(jsonPath("$.language", is("nl")))
+                .andExpect(jsonPath("$.name", is("Groene stroom certificaat 2018")))
                 .andExpect(jsonPath("$._links.self.href", is("http://localhost/v1/certificates/83020711970/2")))
                 .andExpect(jsonPath("$._links.download.href", is("http://localhost/v1/certificates/83020711970/2018/nl/download")))
 

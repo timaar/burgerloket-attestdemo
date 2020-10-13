@@ -60,15 +60,15 @@ public class GroeneStroomCertificaatController {
     }
 
     @GetMapping("/{insz}/{id}")
-    public ResponseEntity<EntityModel<GroeneStroomCertificaat>> findOne(@PathVariable long id,
-                                                                        @PathVariable String insz) {
+    public ResponseEntity<EntityModel<GroeneStroomCertificaatDTO>> findOne(@PathVariable long id,
+                                                                           @PathVariable String insz) {
 
         // TODO Verify JWT Token in the security service
 
         Optional<GroeneStroomCertificaat> optionalGroenStroomCertificaat = repository.findById(id);
 
         return optionalGroenStroomCertificaat
-                .map(certificaat -> EntityModel.of(certificaat,
+                .map(certificaat -> EntityModel.of(groeneStroomCertificaatAssembler.toModel(certificaat),
                         linkTo(methodOn(GroeneStroomCertificaatController.class).findOne(certificaat.getId(), insz))
                                 .withSelfRel(),
                         linkTo(methodOn(GroeneStroomCertificaatController.class).download(insz, certificaat.getJaartal(), certificaat.getTaal()))
