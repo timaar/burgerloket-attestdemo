@@ -23,9 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 @CommonsLog
 @RestController
 @RequestMapping(value = "/v1/certificates", produces = {MediaTypes.HAL_JSON_VALUE})
@@ -68,11 +65,7 @@ public class GroeneStroomCertificaatController {
         Optional<GroeneStroomCertificaat> optionalGroenStroomCertificaat = repository.findById(id);
 
         return optionalGroenStroomCertificaat
-                .map(certificaat -> EntityModel.of(groeneStroomCertificaatAssembler.toModel(certificaat),
-                        linkTo(methodOn(GroeneStroomCertificaatController.class).findOne(certificaat.getId(), insz))
-                                .withSelfRel(),
-                        linkTo(methodOn(GroeneStroomCertificaatController.class).download(insz, certificaat.getJaartal(), certificaat.getTaal()))
-                                .withRel("download")))
+                .map(certificaat -> EntityModel.of(groeneStroomCertificaatAssembler.toModel(certificaat)))
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -85,7 +78,9 @@ public class GroeneStroomCertificaatController {
         // TODO Verify JWT Token in the security service
 
         log.debug("In real application get pdf from database or other webservice.");
+        Optional<GroeneStroomCertificaat> optionalGroenStroomCertificaat = repository.findByInszAndJaartalAndTaal(insz, jaar, taal);
         ClassPathResource resource = new ClassPathResource("dummy.pdf");
+
         if (resource != null) {
             return ResponseEntity.ok().body(resource);
         } else {
