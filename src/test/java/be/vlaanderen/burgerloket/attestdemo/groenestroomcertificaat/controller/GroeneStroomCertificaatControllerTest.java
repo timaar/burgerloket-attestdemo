@@ -4,6 +4,7 @@ import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.assemblers.G
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.domain.GroeneStroomCertificaat;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.repository.GroeneStroomCertficaatRepository;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.security.JWTSecurityService;
+import lombok.extern.apachecommons.CommonsLog;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -31,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @WebMvcTest(GroeneStroomCertificaatController.class)
 @Import({ GroeneStroomCertificaatAssembler.class, JWTSecurityService.class})
+@CommonsLog
 public class GroeneStroomCertificaatControllerTest {
 
     @Autowired
@@ -70,6 +73,28 @@ public class GroeneStroomCertificaatControllerTest {
 
                 .andExpect(jsonPath("$.page.size", is(2)))
                 .andExpect(jsonPath("$.page.totalElements", is(2)))
+                .andExpect(jsonPath("$.page.totalPages", is(1)))
+                .andExpect(jsonPath("$.page.number", is(0)))
+                .andReturn();
+    }
+
+    @Test
+    public void findAllShouldNotThrow404() throws Exception {
+
+        Page<GroeneStroomCertificaat> page = new PageImpl<>( Collections.emptyList());
+
+        given(repository.findAllByInsz(any(), any())).willReturn(page);
+
+        mvc.perform(get("/v1/certificates/83020711970")
+                .accept(MediaTypes.HAL_JSON_VALUE))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE))
+
+                .andExpect(jsonPath("$._links.self.href", is("http://localhost/v1/certificates/83020711970")))
+
+                .andExpect(jsonPath("$.page.size", is(0)))
+                .andExpect(jsonPath("$.page.totalElements", is(0)))
                 .andExpect(jsonPath("$.page.totalPages", is(1)))
                 .andExpect(jsonPath("$.page.number", is(0)))
                 .andReturn();
