@@ -12,7 +12,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
-public class GroeneStroomCertificaatAssembler extends RepresentationModelAssemblerSupport<GroeneStroomCertificaat, GroeneStroomCertificaatDTO> {
+public class GroeneStroomCertificaatAssembler
+        extends RepresentationModelAssemblerSupport<GroeneStroomCertificaat, GroeneStroomCertificaatDTO> {
 
     public GroeneStroomCertificaatAssembler(){
         super(GroeneStroomCertificaatController.class, GroeneStroomCertificaatDTO.class);

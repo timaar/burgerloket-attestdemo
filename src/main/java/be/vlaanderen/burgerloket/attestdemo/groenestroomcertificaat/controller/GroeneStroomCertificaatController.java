@@ -4,6 +4,7 @@ import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.assemblers.G
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.domain.GroeneStroomCertificaat;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.dto.GroeneStroomCertificaatDTO;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.repository.GroeneStroomCertficaatRepository;
+import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.security.JWTSecurityService;
 import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -14,7 +15,6 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,26 +28,29 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @CommonsLog
 @RestController
-@RequestMapping(value = "/v1/certificates", produces = {MediaType.APPLICATION_JSON_VALUE, MediaTypes.HAL_JSON_VALUE})
+@RequestMapping(value = "/v1/certificates", produces = {MediaTypes.HAL_JSON_VALUE})
 public class GroeneStroomCertificaatController {
 
     private final GroeneStroomCertficaatRepository repository;
     private final GroeneStroomCertificaatAssembler groeneStroomCertificaatAssembler;
     private final PagedResourcesAssembler<GroeneStroomCertificaat> pagedResourcesAssembler;
+    private final JWTSecurityService jwtSecurityService;
 
     GroeneStroomCertificaatController(GroeneStroomCertficaatRepository repository,
                                       GroeneStroomCertificaatAssembler groeneStroomCertificaatAssembler,
-                                      PagedResourcesAssembler<GroeneStroomCertificaat> pagedResourcesAssembler) {
+                                      PagedResourcesAssembler<GroeneStroomCertificaat> pagedResourcesAssembler,
+                                      JWTSecurityService jwtSecurityService) {
         this.repository = repository;
         this.groeneStroomCertificaatAssembler = groeneStroomCertificaatAssembler;
         this.pagedResourcesAssembler = pagedResourcesAssembler;
+        this.jwtSecurityService = jwtSecurityService;
     }
 
     @GetMapping("/{insz}")
     public ResponseEntity<PagedModel<GroeneStroomCertificaatDTO>> findAll(@PathVariable String insz,
                                                                           @PageableDefault Pageable pageable) {
 
-        // TODO Verify JWT Token
+        // TODO Verify JWT Token in the security service
 
         Page<GroeneStroomCertificaat> certificaten = repository.findAllByInsz(insz, pageable);
         PagedModel<GroeneStroomCertificaatDTO> collModel = pagedResourcesAssembler
@@ -60,7 +63,7 @@ public class GroeneStroomCertificaatController {
     public ResponseEntity<EntityModel<GroeneStroomCertificaat>> findOne(@PathVariable long id,
                                                                         @PathVariable String insz) {
 
-        // TODO Verify JWT Token
+        // TODO Verify JWT Token in the security service
 
         Optional<GroeneStroomCertificaat> optionalGroenStroomCertificaat = repository.findById(id);
 
@@ -79,7 +82,7 @@ public class GroeneStroomCertificaatController {
                                              @PathVariable String jaar,
                                              @PathVariable String taal) {
 
-        // TODO Verify JWT Token
+        // TODO Verify JWT Token in the security service
 
         log.debug("In real application get pdf from database or other webservice.");
         ClassPathResource resource = new ClassPathResource("dummy.pdf");
@@ -88,6 +91,5 @@ public class GroeneStroomCertificaatController {
         } else {
             return ResponseEntity.notFound().build();
         }
-
     }
 }
