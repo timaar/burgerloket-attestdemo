@@ -3,12 +3,12 @@ package be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.controller;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.assemblers.GroeneStroomCertificaatAssembler;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.domain.GroeneStroomCertificaat;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.dto.GroeneStroomCertificaatDTO;
+import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.dto.GroeneStroomCertificaatPdfDTO;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.exception.AttestNotFoundException;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.repository.GroeneStroomCertficaatRepository;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.security.JWTSecurityService;
 import lombok.extern.apachecommons.CommonsLog;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import org.apache.commons.io.IOUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.Optional;
 
 @CommonsLog
@@ -65,6 +67,8 @@ public class GroeneStroomCertificaatController {
 
         Optional<GroeneStroomCertificaat> optionalGroenStroomCertificaat = repository.findById(id);
 
+        // TODO validate if the user has the right to see this cert insz from path and from certificate should be the same
+
         return optionalGroenStroomCertificaat
                 .map(certificaat -> EntityModel.of(groeneStroomCertificaatAssembler.toModel(certificaat)))
                 .map(ResponseEntity::ok)
@@ -73,17 +77,28 @@ public class GroeneStroomCertificaatController {
     }
 
     @GetMapping("/{insz}/{jaar}/{taal}/download")
-    public ResponseEntity<Resource> download(@PathVariable String insz,
+    public ResponseEntity<GroeneStroomCertificaatPdfDTO> download(@PathVariable String insz,
                                              @PathVariable String jaar,
                                              @PathVariable String taal) {
 
         // TODO Verify JWT Token in the security service and throw AccessDeniedException if not valid
+        // TODO validate if the user has the right to see this cert insz from path and from certificate should be the same
 
         Optional<GroeneStroomCertificaat> optionalGroenStroomCertificaat = repository.findByInszAndJaartalAndTaal(insz, jaar, taal);
         GroeneStroomCertificaat certificaat = optionalGroenStroomCertificaat.orElseThrow(() ->
                 new AttestNotFoundException("Could not find the certificate you are looking for."));
-        log.debug("In real application get pdf from database or other webservice.");
 
-        return ResponseEntity.ok().body(new ClassPathResource("dummy.pdf"));
+        try {
+            log.debug("In real application get pdf from database or other webservice.");
+            byte[] bytes = IOUtils.toByteArray(getClass().getResourceAsStream("/dummy.pdf"));
+            GroeneStroomCertificaatPdfDTO verlofAntwoordDto = GroeneStroomCertificaatPdfDTO.builder()
+                    .attest(Base64.getEncoder().encodeToString(bytes))
+                    .contentType("application/pdf")
+                    .build();
+
+            return ResponseEntity.ok().body(verlofAntwoordDto);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 }
