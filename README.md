@@ -7,6 +7,9 @@ If you want to integrate with burgerprofiel you have to create a client that pro
 To see your certificate(s) on mijn burgerprofiel there is also some configuration needed on the Vlaanderen side but 
 if you implement this demo for your use-case the integration with "mijn burgerprofiel" is a matter of hours.
 
+# Demo
+You can find a demo of the application here: [demo](http://burgerloketattestdemogroenestroomcer-env.eba-cm8dp3tp.eu-west-1.elasticbeanstalk.com/v1/certificates/83020711970)
+
 # Related tutorials
 
 1. [Vlaanderen certificates api - Specification](https://documentatie.burgerprofiel.vlaanderen.be/attesten/index.html#section/Certificates-API)

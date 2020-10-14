@@ -8,9 +8,10 @@
 		<version>2.3.4.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
 	<groupId>be.vlaanderen.burgerloket.attestdemo</groupId>
 	<artifactId>groene-stroom-certificaat</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>groene-stroom-certificaat</name>
 	<description>Demo project for attesten module burgerloket</description>
 
