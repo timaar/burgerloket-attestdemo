@@ -1,6 +1,5 @@
 # TODO
-1. errormessages using the spec
-2. security using the spec
+1. security using the spec
 
 # How to use this demo-template
 This is a possible certificates provider for "[mijn burgerprofiel](https://www.vlaanderen.be/uw-overheid/mijn-burgerprofiel)". 
