@@ -3,6 +3,7 @@ package be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.controller;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.assemblers.GroeneStroomCertificaatAssembler;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.domain.GroeneStroomCertificaat;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.dto.GroeneStroomCertificaatDTO;
+import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.exception.AttestNotFoundException;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.repository.GroeneStroomCertficaatRepository;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.security.JWTSecurityService;
 import lombok.extern.apachecommons.CommonsLog;
@@ -47,7 +48,7 @@ public class GroeneStroomCertificaatController {
     public ResponseEntity<PagedModel<GroeneStroomCertificaatDTO>> findAll(@PathVariable String insz,
                                                                           @PageableDefault Pageable pageable) {
 
-        // TODO Verify JWT Token in the security service
+        // TODO Verify JWT Token in the security service and throw AccessDeniedException if not valid
 
         Page<GroeneStroomCertificaat> certificaten = repository.findAllByInsz(insz, pageable);
         PagedModel<GroeneStroomCertificaatDTO> collModel = pagedResourcesAssembler
@@ -60,14 +61,15 @@ public class GroeneStroomCertificaatController {
     public ResponseEntity<EntityModel<GroeneStroomCertificaatDTO>> findOne(@PathVariable long id,
                                                                            @PathVariable String insz) {
 
-        // TODO Verify JWT Token in the security service
+        // TODO Verify JWT Token in the security service and throw AccessDeniedException if not valid
 
         Optional<GroeneStroomCertificaat> optionalGroenStroomCertificaat = repository.findById(id);
 
         return optionalGroenStroomCertificaat
                 .map(certificaat -> EntityModel.of(groeneStroomCertificaatAssembler.toModel(certificaat)))
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() ->
+                        new AttestNotFoundException("Could not find the certificate you are looking for."));
     }
 
     @GetMapping("/{insz}/{jaar}/{taal}/download")
@@ -75,16 +77,13 @@ public class GroeneStroomCertificaatController {
                                              @PathVariable String jaar,
                                              @PathVariable String taal) {
 
-        // TODO Verify JWT Token in the security service
+        // TODO Verify JWT Token in the security service and throw AccessDeniedException if not valid
 
-        log.debug("In real application get pdf from database or other webservice.");
         Optional<GroeneStroomCertificaat> optionalGroenStroomCertificaat = repository.findByInszAndJaartalAndTaal(insz, jaar, taal);
-        ClassPathResource resource = new ClassPathResource("dummy.pdf");
+        GroeneStroomCertificaat certificaat = optionalGroenStroomCertificaat.orElseThrow(() ->
+                new AttestNotFoundException("Could not find the certificate you are looking for."));
+        log.debug("In real application get pdf from database or other webservice.");
 
-        if (resource != null) {
-            return ResponseEntity.ok().body(resource);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok().body(new ClassPathResource("dummy.pdf"));
     }
 }

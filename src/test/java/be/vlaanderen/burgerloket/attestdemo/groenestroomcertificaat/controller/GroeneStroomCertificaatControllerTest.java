@@ -125,13 +125,47 @@ public class GroeneStroomCertificaatControllerTest {
     }
 
     @Test
+    public void findOneNotFound() throws Exception {
+        mvc.perform(get("/v1/certificates/83020711970/2")
+                .accept(MediaTypes.HAL_JSON_VALUE))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE))
+
+                .andExpect(jsonPath("$.title", is("An error occurred!")))
+                .andExpect(jsonPath("$.detail", is("Could not find the certificate you are looking for.")))
+                .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.value())))
+
+                .andReturn();
+    }
+
+    @Test
     public void download() throws Exception {
+
+        given(repository.findByInszAndJaartalAndTaal(any(), any(), any())).
+                willReturn(Optional.of(new GroeneStroomCertificaat(2l, "83020711970", "2018", "Groene stroom certificaat 2018", "nl")));
 
         mvc.perform(get("/v1/certificates/83020711970/2018/nl/download")
                 .accept(MediaTypes.HAL_JSON_VALUE))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE))
+
+                .andReturn();
+    }
+
+    @Test
+    public void downloadNotFound() throws Exception {
+
+        mvc.perform(get("/v1/certificates/83020711970/2018/nl/download")
+                .accept(MediaTypes.HAL_JSON_VALUE))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE))
+
+                .andExpect(jsonPath("$.title", is("An error occurred!")))
+                .andExpect(jsonPath("$.detail", is("Could not find the certificate you are looking for.")))
+                .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.value())))
 
                 .andReturn();
     }
