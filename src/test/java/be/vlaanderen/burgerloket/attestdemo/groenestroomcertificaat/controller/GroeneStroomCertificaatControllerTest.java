@@ -2,6 +2,8 @@ package be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.controller;
 
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.assemblers.GroeneStroomCertificaatAssembler;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.domain.GroeneStroomCertificaat;
+import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.exception.AccessDeniedException;
+import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.exception.AttestNotFoundException;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.repository.GroeneStroomCertficaatRepository;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.security.JWTSecurityService;
 import lombok.extern.apachecommons.CommonsLog;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -79,7 +82,7 @@ public class GroeneStroomCertificaatControllerTest {
     }
 
     @Test
-    public void findAllShouldNotThrow404() throws Exception {
+    public void findAllNothingFoundShouldNotThrow404() throws Exception {
 
         Page<GroeneStroomCertificaat> page = new PageImpl<>( Collections.emptyList());
 
@@ -129,6 +132,57 @@ public class GroeneStroomCertificaatControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE))
+
+                .andReturn();
+    }
+
+    @Test
+    public void testErrorHandlingNotFound() throws Exception {
+        given(repository.findById(2l)).willThrow(new AttestNotFoundException("Niet gevonden message"));
+
+        mvc.perform(get("/v1/certificates/83020711970/2")
+                .accept(MediaTypes.HAL_JSON_VALUE))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE))
+
+                .andExpect(jsonPath("$.title", is("An error occurred!")))
+                .andExpect(jsonPath("$.detail", is("Niet gevonden message")))
+                .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.value())))
+
+                .andReturn();
+    }
+
+    @Test
+    public void testErrorHandlingAccessDenied() throws Exception {
+        given(repository.findById(2l)).willThrow(new AccessDeniedException("Access Denied"));
+
+        mvc.perform(get("/v1/certificates/83020711970/2")
+                .accept(MediaTypes.HAL_JSON_VALUE))
+                .andDo(print())
+                .andExpect(status().isForbidden())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE))
+
+                .andExpect(jsonPath("$.title", is("An error occurred!")))
+                .andExpect(jsonPath("$.detail", is("Access Denied")))
+                .andExpect(jsonPath("$.status", is(HttpStatus.FORBIDDEN.value())))
+
+                .andReturn();
+    }
+
+    @Test
+    public void testErrorHandlingAllOthers() throws Exception {
+        given(repository.findById(2l)).willThrow(new RuntimeException("Internal problem"));
+
+        mvc.perform(get("/v1/certificates/83020711970/2")
+                .accept(MediaTypes.HAL_JSON_VALUE))
+                .andDo(print())
+                .andExpect(status().isInternalServerError())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE))
+
+                .andExpect(jsonPath("$.title", is("An error occurred!")))
+                .andExpect(jsonPath("$.detail", is("Internal problem")))
+                .andExpect(jsonPath("$.status", is(HttpStatus.INTERNAL_SERVER_ERROR.value())))
 
                 .andReturn();
     }
