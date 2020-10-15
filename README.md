@@ -20,7 +20,9 @@ You can find a demo of the application here: [demo](http://burgerloketattestdemo
 
 # Discuss in team
 
-1. Pagemetadata: In specification it is: 'pageMetadata' in spring-default it is: 'page' 
+1. Pagemetadata: In specification it is: 'pageMetadata' in spring-default it is: 'page'
+2. links: In specification it is: 'links' in hateoas specification it is: '_links'
+3. certificates: In specification it is: 'certificates' in hateoas specification it is: '_embedded/certificates'
 
 # Solved to match specification but still discuss in team
 
