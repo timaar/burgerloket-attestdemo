@@ -20,9 +20,16 @@ You can find a demo of the application here: [demo](http://burgerloketattestdemo
 
 # Discuss in team
 
+In short the attesten-service is not using the HAL representation: [Internet draft](https://tools.ietf.org/html/draft-kelly-json-hal-08)
+
 1. Pagemetadata: In specification it is: 'pageMetadata' in spring-default it is: 'page'
 2. links: In specification it is: 'links' in hateoas specification it is: '_links'
-3. certificates: In specification it is: 'certificates' in hateoas specification it is: '_embedded/certificates'
+3. certificates: In specification it is: 'certificates' in hateoas specification it is: '_embedded/certificates' 
+
+What is HAL: [wikipedia](https://en.wikipedia.org/wiki/Hypertext_Application_Language)
+
+My suggestion is to either make attesten-service HAL ready and changing the spec or not call the specification a HAL specification.
+
 
 # Solved to match specification but still discuss in team
 
