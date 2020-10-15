@@ -8,8 +8,6 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-import static be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.util.Constants.DEFAULT_LIMIT;
-import static be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.util.Constants.DEFAULT_PAGE;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -49,7 +47,7 @@ public class GroeneStroomCertificaatAssembler
 
         log.debug("provide default link");
         dtos.add(linkTo(methodOn(GroeneStroomCertificaatController.class)
-                .findAll(insz, DEFAULT_PAGE, DEFAULT_LIMIT))
+                .findAll(insz, null, null))
                 .withSelfRel());
 
         return dtos;

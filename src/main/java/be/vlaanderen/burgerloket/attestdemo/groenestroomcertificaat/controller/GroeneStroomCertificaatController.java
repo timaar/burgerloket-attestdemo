@@ -19,14 +19,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.Base64;
 import java.util.Optional;
-
-import static be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.util.Constants.DEFAULT_LIMIT;
-import static be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.util.Constants.DEFAULT_PAGE;
 
 @CommonsLog
 @RestController
@@ -37,6 +35,9 @@ public class GroeneStroomCertificaatController {
     private final GroeneStroomCertificaatAssembler groeneStroomCertificaatAssembler;
     private final PagedResourcesAssembler<GroeneStroomCertificaat> pagedResourcesAssembler;
     private final JWTSecurityService jwtSecurityService;
+
+    private static final Integer DEFAULT_PAGE = 0;
+    private static final Integer DEFAULT_LIMIT = 10;
 
     GroeneStroomCertificaatController(GroeneStroomCertficaatRepository repository,
                                       GroeneStroomCertificaatAssembler groeneStroomCertificaatAssembler,
@@ -50,12 +51,10 @@ public class GroeneStroomCertificaatController {
 
     @GetMapping("/{insz}")
     public ResponseEntity<PagedModel<GroeneStroomCertificaatDTO>> findAll(@PathVariable String insz,
-                                                                          @PathVariable(name = "page", required = false) Integer page,
-                                                                          @PathVariable(name = "limit", required = false) Integer limit) {
-        page = page != null ? page : DEFAULT_PAGE;
-        limit = limit != null ? limit : DEFAULT_LIMIT;
+                                                                          @RequestParam("page") Optional<Integer> page,
+                                                                          @RequestParam("limit") Optional<Integer> limit) {
 
-        Page<GroeneStroomCertificaat> certificaten = repository.findAllByInsz(insz, PageRequest.of(page, limit));
+        Page<GroeneStroomCertificaat> certificaten = repository.findAllByInsz(insz, PageRequest.of(page.orElse(DEFAULT_PAGE), limit.orElse(DEFAULT_LIMIT)));
         PagedModel<GroeneStroomCertificaatDTO> collModel = pagedResourcesAssembler
                 .toModel(certificaten, groeneStroomCertificaatAssembler);
 

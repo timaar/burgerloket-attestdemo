@@ -92,7 +92,7 @@ public class GroeneStroomCertificaatControllerTest {
 
         given(repository.findAllByInsz(any(), any())).willReturn(page);
 
-        mvc.perform(get("/v1/certificates/83020711970?page=0?limit=2")
+        mvc.perform(get("/v1/certificates/83020711970?page=0&limit=2")
                 .accept(MediaTypes.HAL_JSON_VALUE))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -109,7 +109,7 @@ public class GroeneStroomCertificaatControllerTest {
                 .andExpect(jsonPath("$._embedded.certificates[1].name", is("Groene stroom certificaat 2018")))
                 .andExpect(jsonPath("$._embedded.certificates[1]._links.self.href", is("http://localhost/v1/certificates/83020711970/2")))
 
-                .andExpect(jsonPath("$._links.self.href", is("http://localhost/v1/certificates/83020711970?page=0?limit%3D2")))
+                .andExpect(jsonPath("$._links.self.href", is("http://localhost/v1/certificates/83020711970?page=0&limit=2")))
 
                 .andExpect(jsonPath("$.page.size", is(2)))
                 .andExpect(jsonPath("$.page.totalElements", is(2)))
