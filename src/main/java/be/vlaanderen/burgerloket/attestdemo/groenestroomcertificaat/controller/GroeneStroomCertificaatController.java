@@ -10,8 +10,7 @@ import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.security.JWT
 import lombok.extern.apachecommons.CommonsLog;
 import org.apache.commons.io.IOUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
@@ -25,6 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.Optional;
+
+import static be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.util.Constants.DEFAULT_LIMIT;
+import static be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.util.Constants.DEFAULT_PAGE;
 
 @CommonsLog
 @RestController
@@ -48,11 +50,12 @@ public class GroeneStroomCertificaatController {
 
     @GetMapping("/{insz}")
     public ResponseEntity<PagedModel<GroeneStroomCertificaatDTO>> findAll(@PathVariable String insz,
-                                                                          @PageableDefault Pageable pageable) {
+                                                                          @PathVariable(name = "page", required = false) Integer page,
+                                                                          @PathVariable(name = "limit", required = false) Integer limit) {
+        page = page != null ? page : DEFAULT_PAGE;
+        limit = limit != null ? limit : DEFAULT_LIMIT;
 
-        // TODO Verify JWT Token in the security service and throw AccessDeniedException if not valid
-
-        Page<GroeneStroomCertificaat> certificaten = repository.findAllByInsz(insz, pageable);
+        Page<GroeneStroomCertificaat> certificaten = repository.findAllByInsz(insz, PageRequest.of(page, limit));
         PagedModel<GroeneStroomCertificaatDTO> collModel = pagedResourcesAssembler
                 .toModel(certificaten, groeneStroomCertificaatAssembler);
 

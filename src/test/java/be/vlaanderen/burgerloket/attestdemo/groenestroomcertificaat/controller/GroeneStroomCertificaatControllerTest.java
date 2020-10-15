@@ -83,6 +83,42 @@ public class GroeneStroomCertificaatControllerTest {
     }
 
     @Test
+    public void findAllPagingTest() throws Exception {
+
+        Page<GroeneStroomCertificaat> page = new PageImpl<>( Arrays.asList(
+                new GroeneStroomCertificaat(1l, "83020711970", "2019","Groene stroom certificaat 2019", "nl"),
+                new GroeneStroomCertificaat(2l, "83020711970", "2018", "Groene stroom certificaat 2018", "nl")
+        ));
+
+        given(repository.findAllByInsz(any(), any())).willReturn(page);
+
+        mvc.perform(get("/v1/certificates/83020711970?page=0?limit=2")
+                .accept(MediaTypes.HAL_JSON_VALUE))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE))
+                .andExpect(jsonPath("$._embedded.certificates[0].id", is(1)))
+                .andExpect(jsonPath("$._embedded.certificates[0].year", is("2019")))
+                .andExpect(jsonPath("$._embedded.certificates[0].language", is("nl")))
+                .andExpect(jsonPath("$._embedded.certificates[0].name", is("Groene stroom certificaat 2019")))
+                .andExpect(jsonPath("$._embedded.certificates[0]._links.self.href", is("http://localhost/v1/certificates/83020711970/1")))
+
+                .andExpect(jsonPath("$._embedded.certificates[1].id", is(2)))
+                .andExpect(jsonPath("$._embedded.certificates[1].year", is("2018")))
+                .andExpect(jsonPath("$._embedded.certificates[1].language", is("nl")))
+                .andExpect(jsonPath("$._embedded.certificates[1].name", is("Groene stroom certificaat 2018")))
+                .andExpect(jsonPath("$._embedded.certificates[1]._links.self.href", is("http://localhost/v1/certificates/83020711970/2")))
+
+                .andExpect(jsonPath("$._links.self.href", is("http://localhost/v1/certificates/83020711970?page=0?limit%3D2")))
+
+                .andExpect(jsonPath("$.page.size", is(2)))
+                .andExpect(jsonPath("$.page.totalElements", is(2)))
+                .andExpect(jsonPath("$.page.totalPages", is(1)))
+                .andExpect(jsonPath("$.page.number", is(0)))
+                .andReturn();
+    }
+
+    @Test
     public void findAllNothingFoundShouldNotThrow404() throws Exception {
 
         Page<GroeneStroomCertificaat> page = new PageImpl<>( Collections.emptyList());

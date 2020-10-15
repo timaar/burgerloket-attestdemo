@@ -19,5 +19,8 @@ You can find a demo of the application here: [demo](http://burgerloketattestdemo
 
 # Discuss in team
 
-1. Pagination: In specification it is: 'page' & 'limit' in spring-default it is: 'page' & 'size'
-2. Pagemetadata: In specification it is: 'pageMetadata' in spring-default it is: 'page' 
+1. Pagemetadata: In specification it is: 'pageMetadata' in spring-default it is: 'page' 
+
+# Solved to match specification but still discuss in team
+
+1. Pagination: In specification it is: 'page' & 'limit' in spring-default it is: 'page' & 'size' (see @PageableDefault Pageable pageable)
