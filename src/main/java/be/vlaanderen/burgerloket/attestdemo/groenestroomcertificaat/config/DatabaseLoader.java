@@ -13,7 +13,7 @@ public class DatabaseLoader {
     CommandLineRunner init(GroeneStroomCertficaatRepository repository) {
 
         return args -> {
-            for (int i = 0; i < 35; i++) {
+            for (int i = 0; i < 2; i++) {
                 repository.save(new GroeneStroomCertificaat("Groene stroom certificaat " + (2020 - i), "83020711970", String.valueOf(i), "nl"));
                 repository.save(new GroeneStroomCertificaat("Groene stroom certificaat " + (2020 - i), "83020711970", String.valueOf(i), "fr"));
                 repository.save(new GroeneStroomCertificaat("Groene stroom certificaat " + (2020 - i), "83020711970", String.valueOf(i), "en"));
