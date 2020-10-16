@@ -3,12 +3,12 @@ package be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.controller;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.assemblers.GroeneStroomCertificaatAssembler;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.domain.GroeneStroomCertificaat;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.dto.GroeneStroomCertificaatDTO;
-import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.dto.GroeneStroomCertificaatPdfDTO;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.exception.AttestNotFoundException;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.repository.GroeneStroomCertficaatRepository;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.security.JWTSecurityService;
 import lombok.extern.apachecommons.CommonsLog;
-import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -22,8 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.util.Base64;
 import java.util.Optional;
 
 @CommonsLog
@@ -79,7 +77,7 @@ public class GroeneStroomCertificaatController {
     }
 
     @GetMapping("/{insz}/{jaar}/{taal}/download")
-    public ResponseEntity<GroeneStroomCertificaatPdfDTO> download(@PathVariable String insz,
+    public ResponseEntity<Resource> download(@PathVariable String insz,
                                              @PathVariable String jaar,
                                              @PathVariable String taal) {
 
@@ -90,17 +88,20 @@ public class GroeneStroomCertificaatController {
         GroeneStroomCertificaat certificaat = optionalGroenStroomCertificaat.orElseThrow(() ->
                 new AttestNotFoundException("Could not find the certificate you are looking for."));
 
-        try {
-            log.debug("In real application get pdf from database or other webservice.");
-            byte[] bytes = IOUtils.toByteArray(getClass().getResourceAsStream("/dummy.pdf"));
-            GroeneStroomCertificaatPdfDTO verlofAntwoordDto = GroeneStroomCertificaatPdfDTO.builder()
-                    .attest(Base64.getEncoder().encodeToString(bytes))
-                    .contentType("application/pdf")
-                    .build();
+        return ResponseEntity.ok().body(new ClassPathResource("dummy.pdf"));
 
-            return ResponseEntity.ok().body(verlofAntwoordDto);
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+        // The mijnburgerprofiel requires a resource instead of what was specified in the specs
+//        try {
+//            log.debug("In real application get pdf from database or other webservice.");
+//            byte[] bytes = IOUtils.toByteArray(getClass().getResourceAsStream("/dummy.pdf"));
+//            GroeneStroomCertificaatPdfDTO verlofAntwoordDto = GroeneStroomCertificaatPdfDTO.builder()
+//                    .attest(Base64.getEncoder().encodeToString(bytes))
+//                    .contentType("application/pdf")
+//                    .build();
+//
+//            return ResponseEntity.ok().body(verlofAntwoordDto);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e.getMessage(), e);
+//        }
     }
 }
