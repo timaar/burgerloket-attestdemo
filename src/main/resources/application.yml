@@ -5,3 +5,4 @@ spring:
         jwt:
           issuer-uri: https://beta.openid.burgerprofiel.dev-vlaanderen.be/op
           jwk-set-uri: https://beta.openid.burgerprofiel.dev-vlaanderen.be/op/.well-known/openid-configuration
+          clientid-burgerprofiel: 80689076-8c4a-4bef-abc4-82805e17988d

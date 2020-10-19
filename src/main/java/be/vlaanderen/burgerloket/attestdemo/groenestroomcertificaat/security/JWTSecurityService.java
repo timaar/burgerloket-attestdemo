@@ -1,6 +1,7 @@
 package be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.security;
 
 import lombok.extern.apachecommons.CommonsLog;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
@@ -17,19 +18,16 @@ import java.util.List;
 
 @CommonsLog
 @Service
-public class JWTSecurityService
-//        extends WebSecurityConfigurerAdapter
-{
-    private static final String CLIENTID_BURGERPROFIEL = "80689076-8c4a-4bef-abc4-82805e17988d";
-//    private static final String ISSUE_URI = "https://authenticatie-ti.vlaanderen.be/op";
-    private static final String ISSUE_URI = "https://beta.openid.burgerprofiel.dev-vlaanderen.be/op";
+public class JWTSecurityService {
 
     @Bean
-    public JwtDecoder jwtDecoder() {
-        NimbusJwtDecoder jwtDecoder = (NimbusJwtDecoder) JwtDecoders.fromIssuerLocation(ISSUE_URI);
+    public JwtDecoder jwtDecoder(@Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}") String issuer,
+                                 @Value("${spring.security.oauth2.resourceserver.jwt.clientid-burgerprofiel}") String clientid
+    ) {
+        NimbusJwtDecoder jwtDecoder = (NimbusJwtDecoder) JwtDecoders.fromIssuerLocation(issuer);
         OAuth2TokenValidator<Jwt> audienceValidator = new JwtClaimValidator<List<String>>(JwtClaimNames.AUD, aud ->
-                aud.contains(CLIENTID_BURGERPROFIEL));
-        OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(ISSUE_URI);
+                aud.contains(clientid));
+        OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(issuer);
         jwtDecoder.setJwtValidator(new DelegatingOAuth2TokenValidator<>(withIssuer, audienceValidator));
         return jwtDecoder;
     }
