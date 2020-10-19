@@ -213,10 +213,10 @@ public class GroeneStroomCertificaatNotHalAssembler {
      * ]
      * }
      */
-    public GroeneStroomCertificaatNotHalPagedDTO toModel(Page<GroeneStroomCertificaat> certificaten, Integer page, Integer limit, String selfLink) {
+    public GroeneStroomCertificaatNotHalPagedDTO toModel(Page<GroeneStroomCertificaat> certificaten, Integer page, Integer limit) {
         return GroeneStroomCertificaatNotHalPagedDTO.builder()
                 .certificates(getCertificaten(certificaten.getContent()))
-                .links(mapListLinks(certificaten, page, limit, selfLink))
+                .links(mapListLinks(certificaten, page, limit))
                 .pageMetadata(mapPageMetadata(certificaten))
                 .build();
     }
@@ -230,44 +230,43 @@ public class GroeneStroomCertificaatNotHalAssembler {
                 .build();
     }
 
-    private List<LinkNotHalDTO> mapListLinks(Page<GroeneStroomCertificaat> certificaten, Integer page, Integer limit, String selfLink) {
+    private List<LinkNotHalDTO> mapListLinks(Page<GroeneStroomCertificaat> certificaten, Integer page, Integer limit) {
         List<LinkNotHalDTO> links = new ArrayList<>();
-        links.add(getSelfListLink(selfLink));
-        links.add(getNextListLink(certificaten));
-        links.add(getStartListLink(certificaten));
-        links.add(getLastListLink(certificaten));
+        links.add(getSelfListLink(page, limit));
+        links.add(getNextListLink(certificaten, page, limit));
+        links.add(getStartListLink(limit));
+        links.add(getLastListLink(certificaten, limit));
         return links;
     }
 
-    private LinkNotHalDTO getSelfListLink(String selfLink) {
+    private LinkNotHalDTO getSelfListLink(Integer currentPage, Integer limit) {
         return LinkNotHalDTO.builder()
-                .href(ServletUriComponentsBuilder.fromCurrentRequestUri().build().toUriString())
+                .href(getBaseUri() + "/v1/certificates/nothal/" + getInsz() + "?limit=" + limit + "&page=" + currentPage)
                 .rel("self")
                 .build();
     }
 
-    private LinkNotHalDTO getNextListLink(Page<GroeneStroomCertificaat> certificaten) {
-        Integer currentPage = Integer.valueOf(getCurrentPage());
+    private LinkNotHalDTO getNextListLink(Page<GroeneStroomCertificaat> certificaten, Integer currentPage, Integer limit) {
         Integer nextPage = currentPage >= certificaten.getTotalPages() - 1 ? currentPage : currentPage + 1;
 
         return LinkNotHalDTO.builder()
-                .href(getBaseUri() + "/v1/certificates/nothal/" + getInsz() + "?limit=" + getLimit() + "&page=" + nextPage)
+                .href(getBaseUri() + "/v1/certificates/nothal/" + getInsz() + "?limit=" + limit + "&page=" + nextPage)
                 .rel("next")
                 .build();
     }
 
-    private LinkNotHalDTO getStartListLink(Page<GroeneStroomCertificaat> certificaten) {
+    private LinkNotHalDTO getStartListLink(Integer limit) {
         return LinkNotHalDTO.builder()
-                .href(getBaseUri() + "/v1/certificates/nothal/" + getInsz() + "?limit=" + getLimit() + "&page=" + 0)
+                .href(getBaseUri() + "/v1/certificates/nothal/" + getInsz() + "?limit=" + limit + "&page=" + 0)
                 .rel("start")
                 .build();
     }
 
-    private LinkNotHalDTO getLastListLink(Page<GroeneStroomCertificaat> certificaten) {
+    private LinkNotHalDTO getLastListLink(Page<GroeneStroomCertificaat> certificaten, Integer limit) {
         Integer page = certificaten.getTotalPages();
 
         return LinkNotHalDTO.builder()
-                .href(getBaseUri() + "/v1/certificates/nothal/" + getInsz() + "?limit=" + getLimit() + "&page=" + page)
+                .href(getBaseUri() + "/v1/certificates/nothal/" + getInsz() + "?limit=" + limit + "&page=" + page)
                 .rel("last")
                 .build();
     }
@@ -324,7 +323,7 @@ public class GroeneStroomCertificaatNotHalAssembler {
      * ]
      * }
      */
-    public GroeneStroomCertificaatNotHalDTO toModel(GroeneStroomCertificaat certificaat, String s) {
+    public GroeneStroomCertificaatNotHalDTO toModel(GroeneStroomCertificaat certificaat) {
         return map(certificaat);
     }
 
@@ -345,21 +344,5 @@ public class GroeneStroomCertificaatNotHalAssembler {
                     .orElse(null);
         }
         return null;
-    }
-
-    private String getLimit() {
-        String path = ServletUriComponentsBuilder.fromCurrentRequestUri().build().toString();
-        return Arrays.stream(path.split("/"))
-                .filter(s -> Pattern.compile("limit=(\\d+)").asPredicate().test(s))
-                .findFirst()
-                .orElse("10");
-    }
-
-    private String getCurrentPage() {
-        String path = ServletUriComponentsBuilder.fromCurrentRequestUri().build().toString();
-        return Arrays.stream(path.split("/"))
-                .filter(s -> Pattern.compile("page=(\\d+)").asPredicate().test(s))
-                .findFirst()
-                .orElse("0");
     }
 }

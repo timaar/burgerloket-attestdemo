@@ -50,7 +50,7 @@ public class GroenStroomCertificaatNotHalController {
 
         Page<GroeneStroomCertificaat> certificaten = repository.findAllByInsz(insz, PageRequest.of(page.orElse(DEFAULT_PAGE), limit.orElse(DEFAULT_LIMIT)));
 
-        return ResponseEntity.ok(groeneStroomCertificaatNotHalAssembler.toModel(certificaten, page.orElse(DEFAULT_PAGE), limit.orElse(DEFAULT_LIMIT), "/v1/certificates/nothal/" + insz));
+        return ResponseEntity.ok(groeneStroomCertificaatNotHalAssembler.toModel(certificaten, page.orElse(DEFAULT_PAGE), limit.orElse(DEFAULT_LIMIT)));
     }
 
     @GetMapping("/{insz}/{id}")
@@ -64,7 +64,7 @@ public class GroenStroomCertificaatNotHalController {
             throw new AccessDeniedException("Access Denied");
         }
 
-        return  ResponseEntity.ok(groeneStroomCertificaatNotHalAssembler.toModel(certificaat, "/v1/certificates/nothal/" + insz + "/" + id));
+        return  ResponseEntity.ok(groeneStroomCertificaatNotHalAssembler.toModel(certificaat));
     }
 
     @GetMapping("/{insz}/{jaar}/{taal}/download")
