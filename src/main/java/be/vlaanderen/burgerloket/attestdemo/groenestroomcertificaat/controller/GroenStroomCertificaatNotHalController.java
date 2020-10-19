@@ -4,6 +4,7 @@ import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.assemblers.G
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.domain.GroeneStroomCertificaat;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.dto.nothal.GroeneStroomCertificaatNotHalDTO;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.dto.nothal.GroeneStroomCertificaatNotHalPagedDTO;
+import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.exception.AccessDeniedException;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.exception.AttestNotFoundException;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.repository.GroeneStroomCertficaatRepository;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.security.JWTSecurityService;
@@ -56,25 +57,20 @@ public class GroenStroomCertificaatNotHalController {
     public ResponseEntity<GroeneStroomCertificaatNotHalDTO> findOne(@PathVariable long id,
                                                                     @PathVariable String insz) {
 
-        // TODO Verify JWT Token in the security service and throw AccessDeniedException if not valid
-
         Optional<GroeneStroomCertificaat> optionalGroenStroomCertificaat = repository.findById(id);
 
-        // TODO validate if the user has the right to see this cert insz from path and from certificate should be the same
+        GroeneStroomCertificaat certificaat = optionalGroenStroomCertificaat.orElseThrow(() -> new AttestNotFoundException("Could not find the certificate you are looking for."));
+        if (certificaat.getInsz().equals(insz)) {
+            throw new AccessDeniedException("Access Denied");
+        }
 
-        return optionalGroenStroomCertificaat
-                .map(certificaat -> ResponseEntity.ok(groeneStroomCertificaatNotHalAssembler.toModel(certificaat, "/v1/certificates/nothal/" + insz + "/" + id)))
-                .orElseThrow(() ->
-                        new AttestNotFoundException("Could not find the certificate you are looking for."));
+        return  ResponseEntity.ok(groeneStroomCertificaatNotHalAssembler.toModel(certificaat, "/v1/certificates/nothal/" + insz + "/" + id));
     }
 
     @GetMapping("/{insz}/{jaar}/{taal}/download")
     public ResponseEntity<Resource> download(@PathVariable String insz,
                                              @PathVariable String jaar,
                                              @PathVariable String taal) {
-
-        // TODO Verify JWT Token in the security service and throw AccessDeniedException if not valid
-        // TODO validate if the user has the right to see this cert insz from path and from certificate should be the same
 
         Optional<GroeneStroomCertificaat> optionalGroenStroomCertificaat = repository.findByInszAndJaartalAndTaal(insz, jaar, taal);
         GroeneStroomCertificaat certificaat = optionalGroenStroomCertificaat.orElseThrow(() ->
