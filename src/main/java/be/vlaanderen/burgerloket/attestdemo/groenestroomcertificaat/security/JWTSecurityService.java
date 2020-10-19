@@ -22,8 +22,7 @@ public class JWTSecurityService {
 
     @Bean
     public JwtDecoder jwtDecoder(@Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}") String issuer,
-                                 @Value("${spring.security.oauth2.resourceserver.jwt.clientid-burgerprofiel}") String clientid
-    ) {
+                                 @Value("${spring.security.oauth2.resourceserver.jwt.clientid-burgerprofiel}") String clientid) {
         NimbusJwtDecoder jwtDecoder = (NimbusJwtDecoder) JwtDecoders.fromIssuerLocation(issuer);
         OAuth2TokenValidator<Jwt> audienceValidator = new JwtClaimValidator<List<String>>(JwtClaimNames.AUD, aud ->
                 aud.contains(clientid));
