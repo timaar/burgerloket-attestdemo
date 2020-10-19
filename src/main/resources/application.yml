@@ -1,1 +1,7 @@
-
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://beta.openid.burgerprofiel.dev-vlaanderen.be/op
+          jwk-set-uri: https://beta.openid.burgerprofiel.dev-vlaanderen.be/op/.well-known/openid-configuration
