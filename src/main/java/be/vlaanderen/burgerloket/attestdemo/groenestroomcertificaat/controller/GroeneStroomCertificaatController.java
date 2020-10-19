@@ -66,7 +66,7 @@ public class GroeneStroomCertificaatController {
         Optional<GroeneStroomCertificaat> optionalGroenStroomCertificaat = repository.findById(id);
 
         GroeneStroomCertificaat certificaat = optionalGroenStroomCertificaat.orElseThrow(() -> new AttestNotFoundException("Could not find the certificate you are looking for."));
-        if (certificaat.getInsz().equals(insz)) {
+        if (!certificaat.getInsz().equals(insz)) {
             throw new AccessDeniedException("Access Denied");
         }
 
