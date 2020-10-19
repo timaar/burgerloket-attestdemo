@@ -27,7 +27,11 @@ In beta-environment of mijn burgerprofiel. I changed the implementation that it 
  
 1. Pagemetadata: In specification it is: 'pageMetadata' in spring-default it is: 'page'
 2. links: In specification it is: 'links' in hateoas specification it is: '_links'
-3. certificates: In specification it is: 'certificates' in hateoas specification it is: '_embedded/certificates' 
+3. certificates: In specification it is: 'certificates' in hateoas specification it is: '_embedded/certificates'
+
+not hal related:
+1. languages are not taken correctly (see dataloader and see what comes out on mijnburgerprofiel)
+2. PDF is just a stream isn't it better to do it with some content see code in comment  
 
 # What's next?
 
