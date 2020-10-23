@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 @CommonsLog
 @Component
+@Deprecated // USE HAL
 public class GroeneStroomCertificaatNotHalAssembler {
 
     /**

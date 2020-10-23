@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Deprecated // USE HAL
 public class LinkNotHalDTO {
     private String rel;
     private String href;

@@ -32,6 +32,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Deprecated // USE HAL
 public class GroeneStroomCertificaatNotHalDTO {
     private Long id;
     //private String insz;

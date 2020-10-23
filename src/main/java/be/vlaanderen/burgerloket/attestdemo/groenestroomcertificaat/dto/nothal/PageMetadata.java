@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Deprecated // USE HAL
 public class PageMetadata {
     private Integer number;
     private Integer size;

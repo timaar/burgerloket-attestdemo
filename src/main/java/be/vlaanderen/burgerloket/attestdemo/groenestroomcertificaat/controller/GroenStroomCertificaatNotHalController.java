@@ -25,6 +25,7 @@ import java.util.Optional;
 @CommonsLog
 @RestController
 @RequestMapping(value = "/v1/certificates/nothal/", produces = {"application/json"})
+@Deprecated // USE HAL
 public class GroenStroomCertificaatNotHalController {
 
     private final GroeneStroomCertficaatRepository repository;

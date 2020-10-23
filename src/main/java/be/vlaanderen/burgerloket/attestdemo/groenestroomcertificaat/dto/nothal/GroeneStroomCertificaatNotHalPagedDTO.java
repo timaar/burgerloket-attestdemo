@@ -59,6 +59,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Deprecated // USE HAL
 public class GroeneStroomCertificaatNotHalPagedDTO {
     private List<GroeneStroomCertificaatNotHalDTO> certificates = new ArrayList<>();
     private PageMetadata pageMetadata;
