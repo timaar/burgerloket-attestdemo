@@ -76,10 +76,10 @@ public class GroeneStroomCertificaatControllerTest {
 
                 .andExpect(jsonPath("$._links.self.href", is("http://localhost/v1/certificates/83020711970")))
 
-                .andExpect(jsonPath("$.page.size", is(2)))
-                .andExpect(jsonPath("$.page.totalElements", is(2)))
-                .andExpect(jsonPath("$.page.totalPages", is(1)))
-                .andExpect(jsonPath("$.page.number", is(0)))
+                .andExpect(jsonPath("$.pageMetaData.size", is(2)))
+                .andExpect(jsonPath("$.pageMetaData.totalElements", is(2)))
+                .andExpect(jsonPath("$.pageMetaData.totalPages", is(1)))
+                .andExpect(jsonPath("$.pageMetaData.number", is(0)))
                 .andReturn();
     }
 
@@ -112,10 +112,10 @@ public class GroeneStroomCertificaatControllerTest {
 
                 .andExpect(jsonPath("$._links.self.href", is("http://localhost/v1/certificates/83020711970?page=0&limit=2")))
 
-                .andExpect(jsonPath("$.page.size", is(2)))
-                .andExpect(jsonPath("$.page.totalElements", is(2)))
-                .andExpect(jsonPath("$.page.totalPages", is(1)))
-                .andExpect(jsonPath("$.page.number", is(0)))
+                .andExpect(jsonPath("$.pageMetaData.size", is(2)))
+                .andExpect(jsonPath("$.pageMetaData.totalElements", is(2)))
+                .andExpect(jsonPath("$.pageMetaData.totalPages", is(1)))
+                .andExpect(jsonPath("$.pageMetaData.number", is(0)))
                 .andReturn();
     }
 
@@ -134,10 +134,10 @@ public class GroeneStroomCertificaatControllerTest {
 
                 .andExpect(jsonPath("$._links.self.href", is("http://localhost/v1/certificates/83020711970")))
 
-                .andExpect(jsonPath("$.page.size", is(0)))
-                .andExpect(jsonPath("$.page.totalElements", is(0)))
-                .andExpect(jsonPath("$.page.totalPages", is(1)))
-                .andExpect(jsonPath("$.page.number", is(0)))
+                .andExpect(jsonPath("$.pageMetaData.size", is(0)))
+                .andExpect(jsonPath("$.pageMetaData.totalElements", is(0)))
+                .andExpect(jsonPath("$.pageMetaData.totalPages", is(1)))
+                .andExpect(jsonPath("$.pageMetaData.number", is(0)))
                 .andReturn();
     }
 
