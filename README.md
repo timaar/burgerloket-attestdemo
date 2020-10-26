@@ -1,7 +1,6 @@
 # TODO
-1. Use Hal Way support both versions
-2. Check if you can change page to pageMetadata
-3. Update specification
+1. Check if you can change page to pageMetadata
+2. Update [Vlaanderen certificates api - Specification](https://documentatie.burgerprofiel.vlaanderen.be/attesten/index.html#section/Certificates-API) (later)
 
 # How to use this demo-template
 This is a possible certificates provider for "[mijn burgerprofiel](https://www.vlaanderen.be/uw-overheid/mijn-burgerprofiel)". 
