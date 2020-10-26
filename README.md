@@ -10,9 +10,13 @@ if you implement this demo for your use-case the integration with "mijn burgerpr
 
 # Demo
 You can find a demo of the application here: [demo](http://burgerloketattestdemogroenestroomcer-env.eba-cm8dp3tp.eu-west-1.elasticbeanstalk.com/v1/certificates/83020711970)
+1. Get a bearer token as authorization: [get bearertoken](https://beta.openid.burgerprofiel.dev-vlaanderen.be/op/token?code=83020711970.Bar.Foo.80689076-8c4a-4bef-abc4-82805e17988d&grant_type=authorization_code&standardAudiences=true)
+2. Copy content of id_token
+3. Use Postman (or any other REST tool) to query: [http://burgerloketattestdemogroenestroomcer-env.eba-cm8dp3tp.eu-west-1.elasticbeanstalk.com/v1/certificates/83020711970?page=0&limit=100](http://burgerloketattestdemogroenestroomcer-env.eba-cm8dp3tp.eu-west-1.elasticbeanstalk.com/v1/certificates/83020711970?page=0&limit=100)
+4. Use as Bearer token the one you copied in step 2. You should be able to make request to this service.
+
 
 # Related tutorials
-
 1. [Vlaanderen certificates api - Specification](https://documentatie.burgerprofiel.vlaanderen.be/attesten/index.html#section/Certificates-API)
 2. [Spring HATEOAS - Official spring documentation on latest version](https://docs.spring.io/spring-hateoas/docs/current/reference/html/)
 3. [Spring HATEOAS - Embedded collection model name](https://howtodoinjava.com/spring5/hateoas/embedded-collection-name/)
@@ -22,7 +26,7 @@ You can find a demo of the application here: [demo](http://burgerloketattestdemo
 7. [Internet draft of what is HAL](https://tools.ietf.org/html/draft-kelly-json-hal-08)
 
 
-# Specification oddities:
+# Notified specification oddities:
 1. languages are not taken correctly (see dataloader and see what comes out on mijnburgerprofiel)
 2. PDF is just a stream-of-pdf isn't it better to do it with some markup like: fileid: , inhoud: bytearray
 3. Pagination: In specification it is: 'page' & 'limit' in spring-default it is: 'page' & 'size' (see @PageableDefault Pageable pageable)  
