@@ -1,7 +1,3 @@
-# TODO
-1. Check if you can change page to pageMetadata
-2. Update [Vlaanderen certificates api - Specification](https://documentatie.burgerprofiel.vlaanderen.be/attesten/index.html#section/Certificates-API) (later)
-
 # How to use this demo-template
 This is a possible certificates provider for "[mijn burgerprofiel](https://www.vlaanderen.be/uw-overheid/mijn-burgerprofiel)". 
 If you want to integrate with burgerprofiel you have to create a client that produces json as shown in this project. 
@@ -30,3 +26,19 @@ You can find a demo of the application here: [demo](http://burgerloketattestdemo
 1. languages are not taken correctly (see dataloader and see what comes out on mijnburgerprofiel)
 2. PDF is just a stream-of-pdf isn't it better to do it with some markup like: fileid: , inhoud: bytearray
 3. Pagination: In specification it is: 'page' & 'limit' in spring-default it is: 'page' & 'size' (see @PageableDefault Pageable pageable)  
+
+
+# Request came to use pageMetaData instead of page
+Problem: spring-hatoas uses 'page' in the response of a HAL request but 'Mijn burgerprofiel' asked if it is possible to change to their 'pageMetaData'.
+I didn't found an easy configurable solution. So my solution was to change the code of the library and use my custom lib instead. Here is how:
+
+1. Check if you can change page to pageMetadata for hal (done changed the library of spring)
+    - to test you can use:
+        
+        		<dependency>
+        			<groupId>org.springframework.hateoas</groupId>
+        			<artifactId>spring-hateoas</artifactId>
+        			<version>1.2.0.Custom-aiv-SNAPSHOT</version>
+        		</dependency>
+      but first you need to pull the code from spring and change this class and update the pom to the appropriate version you want:
+      ![diagram](changePageToPageMetaData.jpg)
