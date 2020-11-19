@@ -55,11 +55,13 @@ import java.util.List;
  * }
  */
 
+/**
+ * Preferably use HAL implementations to avoid errors in generating
+ */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Deprecated // USE HAL
 public class GroeneStroomCertificaatNotHalPagedDTO {
     private List<GroeneStroomCertificaatNotHalDTO> certificates = new ArrayList<>();
     private PageMetadata pageMetadata;

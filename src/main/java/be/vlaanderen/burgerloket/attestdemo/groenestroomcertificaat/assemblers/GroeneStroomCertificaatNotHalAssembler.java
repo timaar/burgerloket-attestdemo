@@ -16,9 +16,11 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/**
+ * Preferably use HAL implementations to avoid errors in generating
+ */
 @CommonsLog
 @Component
-@Deprecated // USE HAL
 public class GroeneStroomCertificaatNotHalAssembler {
 
     /**

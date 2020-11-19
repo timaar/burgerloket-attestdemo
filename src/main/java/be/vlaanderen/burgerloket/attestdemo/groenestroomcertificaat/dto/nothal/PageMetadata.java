@@ -5,11 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Preferably use HAL implementations to avoid errors in generating
+ */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Deprecated // USE HAL
 public class PageMetadata {
     private Integer number;
     private Integer size;

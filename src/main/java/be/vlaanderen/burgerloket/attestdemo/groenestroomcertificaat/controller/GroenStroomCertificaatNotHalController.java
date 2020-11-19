@@ -7,7 +7,6 @@ import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.dto.nothal.G
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.exception.AccessDeniedException;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.exception.AttestNotFoundException;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.repository.GroeneStroomCertficaatRepository;
-import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.security.JWTSecurityService;
 import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -22,26 +21,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
+/**
+ * Preferably use HAL implementations to avoid errors in generating
+ */
 @CommonsLog
 @RestController
 @RequestMapping(value = "/v1/certificates/nothal/", produces = {"application/json"})
-@Deprecated // USE HAL
 public class GroenStroomCertificaatNotHalController {
 
     private final GroeneStroomCertficaatRepository repository;
     private final GroeneStroomCertificaatNotHalAssembler groeneStroomCertificaatNotHalAssembler;
-    private final JWTSecurityService jwtSecurityService;
 
     private static final Integer DEFAULT_PAGE = 0;
     private static final Integer DEFAULT_LIMIT = 10;
 
 
     GroenStroomCertificaatNotHalController(GroeneStroomCertficaatRepository repository,
-                                           GroeneStroomCertificaatNotHalAssembler groeneStroomCertificaatNotHalAssembler,
-                                           JWTSecurityService jwtSecurityService) {
+                                           GroeneStroomCertificaatNotHalAssembler groeneStroomCertificaatNotHalAssembler) {
         this.repository = repository;
         this.groeneStroomCertificaatNotHalAssembler = groeneStroomCertificaatNotHalAssembler;
-        this.jwtSecurityService = jwtSecurityService;
     }
 
     @GetMapping("/{insz}")

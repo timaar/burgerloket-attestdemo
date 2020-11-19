@@ -6,7 +6,6 @@ import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.dto.GroeneSt
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.exception.AccessDeniedException;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.exception.AttestNotFoundException;
 import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.repository.GroeneStroomCertficaatRepository;
-import be.vlaanderen.burgerloket.attestdemo.groenestroomcertificaat.security.JWTSecurityService;
 import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -33,19 +32,16 @@ public class GroeneStroomCertificaatController {
     private final GroeneStroomCertficaatRepository repository;
     private final GroeneStroomCertificaatAssembler groeneStroomCertificaatAssembler;
     private final PagedResourcesAssembler<GroeneStroomCertificaat> pagedResourcesAssembler;
-    private final JWTSecurityService jwtSecurityService;
 
     private static final Integer DEFAULT_PAGE = 0;
     private static final Integer DEFAULT_LIMIT = 10;
 
     GroeneStroomCertificaatController(GroeneStroomCertficaatRepository repository,
                                       GroeneStroomCertificaatAssembler groeneStroomCertificaatAssembler,
-                                      PagedResourcesAssembler<GroeneStroomCertificaat> pagedResourcesAssembler,
-                                      JWTSecurityService jwtSecurityService) {
+                                      PagedResourcesAssembler<GroeneStroomCertificaat> pagedResourcesAssembler) {
         this.repository = repository;
         this.groeneStroomCertificaatAssembler = groeneStroomCertificaatAssembler;
         this.pagedResourcesAssembler = pagedResourcesAssembler;
-        this.jwtSecurityService = jwtSecurityService;
     }
 
     @GetMapping("/{insz}")
