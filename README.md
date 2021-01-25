@@ -28,7 +28,7 @@ You can find a demo of the application here: [demo](http://burgerloketattestdemo
 # Notified specification oddities:
 1. languages are not taken correctly (see dataloader and see what comes out on mijnburgerprofiel)
 2. PDF is just a stream-of-pdf isn't it better to do it with some markup like: fileid: , inhoud: bytearray
-3. Pagination: In specification it is: 'page' & 'limit' in spring-default it is: 'page' & 'size' (see @PageableDefault Pageable pageable)  
+3. Pagination: In previous specification it is: 'page' & 'limit' in spring-default it is: 'page' & 'size' (see @PageableDefault Pageable pageable) and the latest api specifaction it is: offset and size.  
 
 
 # Request came to use pageMetaData instead of page
