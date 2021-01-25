@@ -11,6 +11,9 @@ You can find a demo of the application here: [demo](http://burgerloketattestdemo
 3. Use Postman (or any other REST tool) to query: [http://burgerloketattestdemogroenestroomcer-env.eba-cm8dp3tp.eu-west-1.elasticbeanstalk.com/v1/certificates/83020711970?page=0&limit=100](http://burgerloketattestdemogroenestroomcer-env.eba-cm8dp3tp.eu-west-1.elasticbeanstalk.com/v1/certificates/83020711970?page=0&limit=100)
 4. Use as Bearer token the one you copied in step 2. You should be able to make request to this service.
 
+#Build
+- mvn clean package
+- cp the jar in target to your favorite cloud
 
 # Related tutorials
 1. [Vlaanderen certificates api - Specification](https://documentatie.burgerprofiel.vlaanderen.be/attesten/index.html#section/Certificates-API)
